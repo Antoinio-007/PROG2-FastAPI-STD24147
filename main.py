@@ -7,7 +7,7 @@ app = FastAPI()
 
 
 @app.get("/hello")
-def read_hello(name: str, is_teacher: bool, request: Request):
+def read_hello(name: str, request: Request, is_teacher: bool = False):
     accept_headers = request.headers.get("Accept")
     if accept_headers != "text/plain":
         return JSONResponse({"message": "Unsupported Media Type"}, status_code=400)
