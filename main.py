@@ -7,15 +7,18 @@ app = FastAPI()
 
 
 @app.get("/hello")
-def read_hello(name: str, request: Request, is_teacher: bool = False):
+def read_hello(request: Request, is_teacher: bool = None, name: str = "Non défini"):
     accept_headers = request.headers.get("Accept")
     if accept_headers != "text/plain":
         return JSONResponse({"message": "Unsupported Media Type"}, status_code=400)
-    message = "Hello, {}!".format(name)
+    if name == "Non défini" and is_teacher is None:
+        return JSONResponse({"message": "Hello world"}, status_code=200)
+    if is_teacher is None:
+        is_teacher = False
     if is_teacher:
-        message = "Hello teacher {}!".format(name)
-    return JSONResponse(content=message, status_code=200)
-
+        return JSONResponse({"message": f"Hello teacher {name}"}, status_code=200)
+    else:
+        return JSONResponse({"message": f"Hello {name}"}, status_code=200)
 
 class WelcomeRequest(BaseModel):
     name: str
